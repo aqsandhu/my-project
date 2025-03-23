@@ -1,0 +1,17 @@
+# Baxoq API URL (this is the most important setting)
+NEXT_PUBLIC_SALEOR_API_URL=http://localhost:8000/graphql/
+
+# Default channel slug - updated to match the one created by the populate command
+NEXT_PUBLIC_DEFAULT_CHANNEL=default-channel
+
+# Checkout API URL
+NEXT_PUBLIC_CHECKOUT_APP_URL=http://localhost:8000/checkout-spa/
+
+# Override the Vercel deployment URL with the localhost for local development
+NEXT_PUBLIC_VERCEL_URL=localhost:3000
+
+# Enable debug mode for more detailed logging
+NEXT_PUBLIC_DEBUG=true
+
+# Add CORS allowed origins explicitly
+NEXT_PUBLIC_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:8000

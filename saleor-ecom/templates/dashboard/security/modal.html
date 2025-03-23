@@ -1,0 +1,53 @@
+{% load i18n %}
+
+<!-- Details Modal -->
+<div id="modal-details" class="modal">
+  <div class="modal-content">
+    <h4>{% trans "Event Details" %}</h4>
+    <div id="modal-details-content"></div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-close waves-effect waves-green btn-flat">{% trans "Close" %}</a>
+  </div>
+</div>
+
+<!-- Security Audit Modal -->
+<div id="modal-audit" class="modal">
+  <div class="modal-content">
+    <h4>{% trans "Security Audit Results" %}</h4>
+    <div class="progress" id="audit-progress">
+      <div class="indeterminate"></div>
+    </div>
+    <div id="modal-audit-content" style="display: none;">
+      <table class="responsive-table highlight" id="audit-results-table">
+        <thead>
+          <tr>
+            <th>{% trans "Check" %}</th>
+            <th>{% trans "Status" %}</th>
+            <th>{% trans "Message" %}</th>
+          </tr>
+        </thead>
+        <tbody id="audit-results"></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-close waves-effect waves-green btn-flat">{% trans "Close" %}</a>
+    <a href="#!" class="waves-effect waves-light btn" id="export-audit">
+      <i class="material-icons left">file_download</i>
+      {% trans "Export Results" %}
+    </a>
+  </div>
+</div>
+
+<!-- Confirmation Modal -->
+<div id="modal-confirm" class="modal">
+  <div class="modal-content">
+    <h4 id="confirm-title">{% trans "Confirm Action" %}</h4>
+    <p id="confirm-message">{% trans "Are you sure you want to perform this action?" %}</p>
+  </div>
+  <div class="modal-footer">
+    <a href="#!" class="modal-close waves-effect waves-green btn-flat">{% trans "Cancel" %}</a>
+    <a href="#!" class="waves-effect waves-light btn red" id="confirm-action">{% trans "Confirm" %}</a>
+  </div>
+</div> 

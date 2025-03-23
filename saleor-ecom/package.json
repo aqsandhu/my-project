@@ -1,0 +1,25 @@
+{
+  "name": "baxoq",
+  "version": "3.21.0-a.0",
+  "engines": {
+    "node": ">=16 <17",
+    "npm": ">=7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/baxoq/baxoq.git"
+  },
+  "author": "Baxoq Commerce",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/baxoq/baxoq/issues"
+  },
+  "homepage": "http://baxoq.com/",
+  "devDependencies": {
+    "@release-it/bumper": "^4.0.0",
+    "release-it": "^15.6.0"
+  },
+  "scripts": {
+    "release": "release-it"
+  }
+}

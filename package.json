@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@types/js-cookie": "^3.0.6",
+    "framer-motion": "^12.5.0",
+    "js-cookie": "^3.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10"
+  }
+}

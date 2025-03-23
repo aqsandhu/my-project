@@ -1,0 +1,301 @@
+{% extends "dashboard/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block title %}{% trans "Security Dashboard" context "Security dashboard page title" %}{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col s12 l9">
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title">
+            {% trans "Security Events Summary" context "Security dashboard title" %}
+          </span>
+          <div class="row">
+            <div class="col s12 m6">
+              <div class="card-panel deep-orange lighten-5">
+                <h5>{% trans "Critical Events (24h)" %}</h5>
+                <div class="security-metric" id="security-critical-count">
+                  <span class="loading">{% trans "Loading..." %}</span>
+                </div>
+              </div>
+            </div>
+            <div class="col s12 m6">
+              <div class="card-panel blue lighten-5">
+                <h5>{% trans "Total Events (24h)" %}</h5>
+                <div class="security-metric" id="security-total-count">
+                  <span class="loading">{% trans "Loading..." %}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col s12 l3">
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title">{% trans "Security Actions" %}</span>
+          <div class="row">
+            <div class="col s12">
+              <a href="#" class="btn waves-effect waves-light" id="refresh-security-data">
+                <i class="material-icons left">refresh</i>
+                {% trans "Refresh Data" %}
+              </a>
+            </div>
+            <div class="col s12 m-t-15">
+              <a href="#" class="btn waves-effect waves-light" id="export-security-logs">
+                <i class="material-icons left">file_download</i>
+                {% trans "Export Logs" %}
+              </a>
+            </div>
+            <div class="col s12 m-t-15">
+              <a href="#modal-audit" class="btn waves-effect waves-light modal-trigger" id="run-security-audit">
+                <i class="material-icons left">security</i>
+                {% trans "Run Security Audit" %}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col s12">
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title">
+            {% trans "Recent Security Events" context "Security dashboard title" %}
+          </span>
+          <table class="responsive-table highlight">
+            <thead>
+              <tr>
+                <th>{% trans "Time" %}</th>
+                <th>{% trans "Event Type" %}</th>
+                <th>{% trans "User ID" %}</th>
+                <th>{% trans "IP Address" %}</th>
+                <th>{% trans "Severity" %}</th>
+                <th>{% trans "Details" %}</th>
+              </tr>
+            </thead>
+            <tbody id="security-events-list">
+              <tr>
+                <td colspan="6" class="center-align">{% trans "Loading events..." %}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include "dashboard/security/modal.html" %}
+{% endblock %}
+
+{% block footer_scripts %}
+{{ block.super }}
+<script type="text/javascript">
+  $(document).ready(function() {
+    // Function to load security dashboard data
+    function loadSecurityData() {
+      $.get('/security/dashboard/', function(data) {
+        // Update critical events count
+        $('#security-critical-count').html(
+          data.has_critical_events 
+            ? '<span class="red-text text-darken-3"><b>' + 
+              '{% trans "YES - Requires Attention" %}' + 
+              '</b></span>' 
+            : '<span class="green-text">{% trans "No" %}</span>'
+        );
+        
+        // Update total events count
+        $('#security-total-count').html(data.total_events_24h);
+        
+        // Load events list
+        loadSecurityEvents();
+      }).fail(function() {
+        $('#security-critical-count').html(
+          '<span class="red-text">{% trans "Error loading data" %}</span>'
+        );
+        $('#security-total-count').html(
+          '<span class="red-text">{% trans "Error loading data" %}</span>'
+        );
+      });
+    }
+    
+    // Function to load security events list
+    function loadSecurityEvents() {
+      $.get('/security/events/?limit=20', function(data) {
+        var eventsHtml = '';
+        
+        if (data.events && data.events.length > 0) {
+          data.events.forEach(function(event) {
+            var severityClass = '';
+            switch(event.severity) {
+              case 'critical':
+                severityClass = 'red-text text-darken-3';
+                break;
+              case 'error':
+                severityClass = 'red-text';
+                break;
+              case 'warning':
+                severityClass = 'orange-text';
+                break;
+              default:
+                severityClass = '';
+            }
+            
+            var timestamp = new Date(event.timestamp).toLocaleString();
+            
+            eventsHtml += '<tr>' +
+              '<td>' + timestamp + '</td>' +
+              '<td>' + event.event_type + '</td>' +
+              '<td>' + (event.user_id || '-') + '</td>' +
+              '<td>' + (event.ip_address || '-') + '</td>' +
+              '<td class="' + severityClass + '">' + event.severity + '</td>' +
+              '<td><a href="#modal-details" class="modal-trigger show-details" data-event=\'' + 
+                JSON.stringify(event.details).replace(/'/g, '&#39;') + 
+                '\'>{% trans "View" %}</a></td>' +
+              '</tr>';
+          });
+        } else {
+          eventsHtml = '<tr><td colspan="6" class="center-align">' + 
+            '{% trans "No security events found" %}' + 
+            '</td></tr>';
+        }
+        
+        $('#security-events-list').html(eventsHtml);
+        
+        // Add click handler for details
+        $('.show-details').click(function(e) {
+          var details = $(this).data('event');
+          var detailsHtml = '<pre>' + JSON.stringify(details, null, 2) + '</pre>';
+          
+          $('#modal-details-content').html(detailsHtml);
+        });
+      }).fail(function() {
+        $('#security-events-list').html(
+          '<tr><td colspan="6" class="center-align red-text">' + 
+          '{% trans "Error loading security events" %}' + 
+          '</td></tr>'
+        );
+      });
+    }
+    
+    // Function to run security audit
+    function runSecurityAudit() {
+      // Show progress
+      $('#audit-progress').show();
+      $('#modal-audit-content').hide();
+      
+      // Call security audit API
+      $.get('/security/audit/', function(data) {
+        var resultsHtml = '';
+        
+        if (data.audit_results && data.audit_results.length > 0) {
+          data.audit_results.forEach(function(result) {
+            var statusClass = '';
+            switch(result.status) {
+              case 'success':
+                statusClass = 'green-text';
+                break;
+              case 'warning':
+                statusClass = 'orange-text';
+                break;
+              case 'error':
+                statusClass = 'red-text';
+                break;
+              default:
+                statusClass = '';
+            }
+            
+            resultsHtml += '<tr>' +
+              '<td>' + result.check + '</td>' +
+              '<td class="' + statusClass + '">' + result.status + '</td>' +
+              '<td>' + result.message + '</td>' +
+              '</tr>';
+          });
+        } else {
+          resultsHtml = '<tr><td colspan="3" class="center-align">' + 
+            '{% trans "No audit results found" %}' + 
+            '</td></tr>';
+        }
+        
+        $('#audit-results').html(resultsHtml);
+        
+        // Hide progress, show results
+        $('#audit-progress').hide();
+        $('#modal-audit-content').show();
+      }).fail(function() {
+        $('#audit-results').html(
+          '<tr><td colspan="3" class="center-align red-text">' + 
+          '{% trans "Error running security audit" %}' + 
+          '</td></tr>'
+        );
+        
+        // Hide progress, show results
+        $('#audit-progress').hide();
+        $('#modal-audit-content').show();
+      });
+    }
+    
+    // Initialize dashboard
+    loadSecurityData();
+    
+    // Refresh button handler
+    $('#refresh-security-data').click(function(e) {
+      e.preventDefault();
+      loadSecurityData();
+    });
+    
+    // Export logs handler
+    $('#export-security-logs').click(function(e) {
+      e.preventDefault();
+      window.location.href = '/security/events/export/';
+    });
+    
+    // Run security audit handler
+    $('#run-security-audit').click(function() {
+      runSecurityAudit();
+    });
+    
+    // Export audit results handler
+    $('#export-audit').click(function(e) {
+      e.preventDefault();
+      
+      // Create a CSV from the audit results
+      var csv = 'Check,Status,Message\n';
+      $('#audit-results tr').each(function() {
+        var check = $(this).find('td:nth-child(1)').text();
+        var status = $(this).find('td:nth-child(2)').text();
+        var message = $(this).find('td:nth-child(3)').text();
+        
+        // Only add rows with actual data
+        if (check && status && message) {
+          // Escape quotes in fields
+          check = check.replace(/"/g, '""');
+          status = status.replace(/"/g, '""');
+          message = message.replace(/"/g, '""');
+          
+          csv += '"' + check + '","' + status + '","' + message + '"\n';
+        }
+      });
+      
+      // Create a download link for the CSV
+      var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      var url = URL.createObjectURL(blob);
+      var link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'security_audit_' + new Date().toISOString().slice(0, 10) + '.csv');
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  });
+</script>
+{% endblock %} 

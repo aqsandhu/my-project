@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  app:
+    container_name: baxoq-storefront
+    build:
+      context: .
+    environment:
+      NEXT_PUBLIC_SALEOR_API_URL: ${NEXT_PUBLIC_SALEOR_API_URL}
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    networks:
+      - saleor_network
+
+  # Add more containers below (nginx, postgres, etc.)
+
+networks:
+  saleor_network:
+    external: false
