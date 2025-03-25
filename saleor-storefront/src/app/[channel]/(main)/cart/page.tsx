@@ -358,7 +358,7 @@ export default function CartPage({ params }: { params: { channel: string } }) {
 			
 			{loading ? (
 				<div className="flex justify-center items-center py-12">
-					<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-700"></div>
+					<div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-700" />
 				</div>
 			) : !checkout || checkout.lines.length === 0 ? (
 				<motion.div 
@@ -429,7 +429,7 @@ export default function CartPage({ params }: { params: { channel: string } }) {
 													</button>
 													<div className="w-12 h-8 flex items-center justify-center border-x border-amber-900/30">
 														{loadingItemId === line.id ? (
-															<div className="animate-spin rounded-full h-4 w-4 border-b-2 border-amber-400"></div>
+															<div className="animate-spin rounded-full h-4 w-4 border-b-2 border-amber-400" />
 														) : (
 															<span className="text-sm text-gray-300">{line.quantity}</span>
 														)}
@@ -499,7 +499,7 @@ export default function CartPage({ params }: { params: { channel: string } }) {
 							>
 								{isCheckingOut ? (
 									<>
-										<div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+										<div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2" />
 										Processing...
 									</>
 								) : (

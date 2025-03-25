@@ -357,7 +357,7 @@ export const CartNavItem = ({ channel }: { channel: string }) => {
 					
 					{loading ? (
 						<div className="flex justify-center py-4">
-							<div className="animate-spin h-6 w-6 border-2 border-amber-600 border-t-transparent rounded-full"></div>
+							<div className="animate-spin h-6 w-6 border-2 border-amber-600 border-t-transparent rounded-full" />
 						</div>
 					) : checkout?.lines && checkout.lines.length > 0 ? (
 						<>
