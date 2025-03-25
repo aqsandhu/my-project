@@ -983,10 +983,6 @@ PRODUCT_MAX_INDEXED_VARIANTS = 1000
 # Patch SubscriberExecutionContext class from `graphql-core-legacy` package
 # to fix bug causing not returning errors for subscription queries.
 try:
-    from . import PatchedSubscriberExecutionContext, __version__
-    from .core.languages import LANGUAGES as CORE_LANGUAGES
-    from .core.schedules import initiated_promotion_webhook_schedule
-    from .graphql.executor import patch_executor
 
     graphql_executor.SubscriberExecutionContext = PatchedSubscriberExecutionContext  # type: ignore[assignment,misc]
     patch_executor()

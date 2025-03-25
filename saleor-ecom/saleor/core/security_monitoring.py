@@ -323,7 +323,6 @@ def security_audit(request):
     This checks various security settings and configurations and returns
     a report of potential issues.
     """
-    from django.conf import settings
 
     # Check security settings
     audit_results = []
