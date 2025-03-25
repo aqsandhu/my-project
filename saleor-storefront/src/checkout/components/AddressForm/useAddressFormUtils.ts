@@ -77,7 +77,7 @@ export const useAddressFormUtils = (countryCode: CountryCode = defaultCountry) =
 					return result;
 				}
 
-				return !!fieldValue ? result : ([...result, fieldName] as AddressField[]);
+				return (fieldValue) ? result : ([...result, fieldName] as AddressField[]);
 			}, [] as AddressField[]);
 		},
 		[isRequiredField],
