@@ -17,7 +17,7 @@ export const useMobileMenu = () => {
 			}
 		};
 
-		const matchMedia = window.matchMedia(`(min-width: 768px)`);
+		const matchMedia = window.matchMedia("(min-width: 768px)");
 		matchMedia.addEventListener("change", handleResize, { passive: true });
 		return () => matchMedia.removeEventListener("change", handleResize);
 	}, []);
