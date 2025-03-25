@@ -14,7 +14,7 @@ class CoreAppConfig(AppConfig):
     def ready(self) -> None:
         CharField.register_lookup(PostgresILike)
         TextField.register_lookup(PostgresILike)
-        
+
         # Initialize Sentry if configured
         self.initialize_sentry()
         self.validate_jwt_manager()
@@ -23,7 +23,7 @@ class CoreAppConfig(AppConfig):
         """Initialize Sentry if it's properly configured."""
         if not hasattr(settings, 'SENTRY_DSN') or not settings.SENTRY_DSN:
             return
-            
+
         if not hasattr(settings, 'SENTRY_INIT'):
             import warnings
             warnings.warn(
@@ -32,7 +32,7 @@ class CoreAppConfig(AppConfig):
                 ImportWarning,
             )
             return
-            
+
         try:
             settings.SENTRY_INIT(settings.SENTRY_DSN, settings.SENTRY_OPTS)
         except Exception as e:

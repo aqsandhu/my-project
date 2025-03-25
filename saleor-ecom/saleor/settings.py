@@ -987,7 +987,7 @@ try:
     from .core.languages import LANGUAGES as CORE_LANGUAGES
     from .core.schedules import initiated_promotion_webhook_schedule
     from .graphql.executor import patch_executor
-    
+
     graphql_executor.SubscriberExecutionContext = PatchedSubscriberExecutionContext  # type: ignore[assignment,misc]
     patch_executor()
 except (ImportError, AttributeError) as e:
@@ -1115,7 +1115,7 @@ BREAKER_BOARD_DRY_RUN_SYNC_EVENTS = get_list(
 # Define SENTRY_INIT function outside the try-except block so it's always available
 def SENTRY_INIT(dsn: str, sentry_opts: dict):
     """Init function for sentry.
-    
+
     Will only be called if SENTRY_DSN is not None, during core start, can be
     overriden in separate settings file.
     """
@@ -1127,11 +1127,11 @@ def SENTRY_INIT(dsn: str, sentry_opts: dict):
             ImportWarning,
         )
         return
-    
+
     # Only import and use these if Sentry SDK is available
     try:
         from sentry_sdk.integrations.logging import ignore_logger
-        
+
         SALEOR_DENYLIST = DEFAULT_DENYLIST + ["private_metadata"]
         SALEOR_PII_DENYLIST = DEFAULT_PII_DENYLIST + [
             "first_name",
@@ -1153,7 +1153,7 @@ def SENTRY_INIT(dsn: str, sentry_opts: dict):
             ),
             **sentry_opts,
         )
-        
+
         # Ignore these loggers to avoid noise
         ignore_logger("graphql.execution.utils")
         ignore_logger("graphql.execution.executor")

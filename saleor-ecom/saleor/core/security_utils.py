@@ -129,7 +129,7 @@ SECURITY_EVENTS = {
 def log_security_event(event_type, user_id=None, ip_address=None, details=None, request=None):
     """
     Log a security event to the security log.
-    
+
     Args:
         event_type: The type of security event (must be in SECURITY_EVENTS)
         user_id: The ID of the user associated with the event (optional)
@@ -140,13 +140,13 @@ def log_security_event(event_type, user_id=None, ip_address=None, details=None, 
     if event_type not in SECURITY_EVENTS:
         logger.error(f"Unknown security event type: {event_type}")
         return
-        
+
     event_info = SECURITY_EVENTS[event_type]
-    
+
     # Extract IP address from request if not provided
     if ip_address is None and request is not None:
         ip_address = get_client_ip(request)
-    
+
     # Create log entry
     log_entry = {
         'timestamp': timezone.now().isoformat(),
@@ -157,7 +157,7 @@ def log_security_event(event_type, user_id=None, ip_address=None, details=None, 
         'ip_address': ip_address,
         'details': details or {}
     }
-    
+
     # Log based on severity
     severity = event_info['severity']
     if severity == 'critical':
@@ -168,45 +168,45 @@ def log_security_event(event_type, user_id=None, ip_address=None, details=None, 
         logger.warning(f"SECURITY: {event_info['name']}", extra=log_entry)
     else:
         logger.info(f"SECURITY: {event_info['name']}", extra=log_entry)
-    
+
     # For critical and error events, we might want to trigger additional actions
     if severity in ['critical', 'error']:
         # Here we could add code to send notifications or trigger alerts
         pass
-    
+
     return log_entry
 
 
 def get_client_ip(request):
     """
     Extract the client IP address from a request safely.
-    
+
     Args:
         request: The HTTP request object
-        
+
     Returns:
         The client IP address as a string
     """
     if not isinstance(request, HttpRequest):
         return None
-        
+
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
         # Get the first IP in the list (client IP)
         ip = x_forwarded_for.split(',')[0].strip()
     else:
         ip = request.META.get('REMOTE_ADDR')
-    
+
     return ip
 
 
 def generate_secure_token(length=64):
     """
     Generate a cryptographically secure random token.
-    
+
     Args:
         length: The length of the token in bytes (default: 64)
-        
+
     Returns:
         A secure random token as a hex string
     """
@@ -216,21 +216,21 @@ def generate_secure_token(length=64):
 def sanitize_input(input_string, allow_html=False):
     """
     Sanitize user input to prevent XSS attacks.
-    
+
     Args:
         input_string: The input string to sanitize
         allow_html: Whether to allow some HTML tags (default: False)
-        
+
     Returns:
         Sanitized input string
     """
     if input_string is None:
         return ""
-        
+
     # Convert to string if it's not already
     if not isinstance(input_string, str):
         input_string = str(input_string)
-    
+
     if not allow_html:
         # Remove all HTML tags and entities
         input_string = re.sub(r'<[^>]*>', '', input_string)
@@ -242,21 +242,21 @@ def sanitize_input(input_string, allow_html=False):
         # Remove script tags and on* attributes
         input_string = re.sub(r'<script[^>]*>.*?</script>', '', input_string, flags=re.DOTALL)
         input_string = re.sub(r'\bon\w+\s*=\s*["\'][^"\']*["\']', '', input_string)
-    
+
     return input_string
 
 
 def is_password_compromised(password):
     """
-    Check if a password has been compromised by checking against the 
+    Check if a password has been compromised by checking against the
     "Have I Been Pwned" API or similar service.
-    
+
     In a production app, you would implement this to check against a service
     like the HIBP API using k-anonymity.
-    
+
     Args:
         password: The password to check
-        
+
     Returns:
         Boolean indicating if the password has been compromised
     """
@@ -267,5 +267,5 @@ def is_password_compromised(password):
         'password', '123456', 'qwerty', 'admin', 'welcome',
         'password123', 'admin123', '12345678', 'abc123'
     ]
-    
+
     return password.lower() in weak_passwords 
