@@ -116,7 +116,7 @@ export async function LoginForm() {
 					Log In
 				</button>
 			</form>
-			<div></div>
+			<div />
 		</div>
 	);
 }
