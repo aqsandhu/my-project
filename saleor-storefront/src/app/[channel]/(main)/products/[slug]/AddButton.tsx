@@ -38,7 +38,7 @@ export function AddButton({
 				// Show success toast
 				const successToast = document.createElement('div');
 				successToast.className = 'fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg z-50 animate-fade-in-out';
-				successToast.textContent = `Item added to cart successfully!`;
+				successToast.textContent = "Item added to cart successfully!";
 				document.body.appendChild(successToast);
 				setTimeout(() => {
 					successToast.remove();

@@ -27,6 +27,6 @@ test("STF_03: Check if price are calculating correctly", async ({ page }) => {
 	const productInCart = page.getByTestId("CartProductList").getByRole("listitem");
 	await expect(productInCart).toHaveCount(1);
 	await expect(productInCart).toContainText(product.name);
-	await expect(productInCart).toContainText(`Qty: 2`);
+	await expect(productInCart).toContainText("Qty: 2");
 	await expect(productInCart).toContainText(totalPrice);
 });

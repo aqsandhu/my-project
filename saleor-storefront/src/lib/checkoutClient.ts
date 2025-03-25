@@ -128,7 +128,7 @@ export async function addLine(checkoutId: string, line: { variantId: string; qua
 			return null;
 		}
 		
-		const response = await fetch(`/api/checkout/lines/add`, {
+		const response = await fetch("/api/checkout/lines/add", {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
