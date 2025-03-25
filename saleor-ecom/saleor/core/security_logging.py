@@ -185,8 +185,8 @@ def rotate_security_logs(max_age_days=30):
     max_age = timedelta(days=max_age_days)
 
     # Get log files
-    log_files = [f for f in log_dir.glob("security*.log")]
-    log_files.extend([f for f in log_dir.glob("security*.json")])
+    log_files = list(log_dir.glob("security*.log"))
+    log_files.extend(list(log_dir.glob("security*.json")))
 
     for log_file in log_files:
         # Skip files in the archive directory
