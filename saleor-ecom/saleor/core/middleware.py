@@ -5,17 +5,13 @@ import json
 import time
 import re
 from dataclasses import dataclass
-from functools import wraps
 
 from django.conf import settings
 from django.http import HttpRequest, HttpResponse, JsonResponse
-from django.utils.functional import SimpleLazyObject
 from django.utils.translation import get_language
 
 from .jwt import JWT_REFRESH_TOKEN_COOKIE_NAME, jwt_decode_with_exception_handler
 from .auth import get_token_from_request
-from ..permission.models import Permission
-from ..permission.enums import get_permissions_enum_dict
 
 if TYPE_CHECKING:
     from ..account.models import User

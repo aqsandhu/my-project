@@ -9,7 +9,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.utils import timezone
 
