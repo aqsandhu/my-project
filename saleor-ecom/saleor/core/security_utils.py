@@ -1,10 +1,6 @@
 import logging
-import os
 import re
 import secrets
-from datetime import datetime
-
-from django.conf import settings
 from django.http import HttpRequest
 from django.utils import timezone
 
